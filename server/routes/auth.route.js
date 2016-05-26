@@ -14,6 +14,14 @@ router.route('/login')
 /** GET /api/auth/random-number - Protected route,
  * needs token returned by the above as header. Authorization: Bearer {token} */
 router.route('/random-number')
-  .get(expressJwt({ secret: config.jwtSecret }), authCtrl.getRandomNumber);
+  .get(expressJwt({
+    secret: config.jwtSecret,
+    getToken: function(req){
+      if(req.cookies && req.cookies.JWT){
+        return req.cookies.JWT;
+      }
+      return null;
+    }
+  }), authCtrl.getRandomNumber);
 
 export default router;
